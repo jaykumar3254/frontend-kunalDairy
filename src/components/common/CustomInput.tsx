@@ -4,36 +4,59 @@ import {
   TextInput,
   StyleSheet,
   TextInputProps,
+  Text,
 } from "react-native";
 
 import { COLORS } from "../../theme/colors";
 
-interface CustomInputProps extends TextInputProps {
+interface CustomInputProps
+  extends TextInputProps {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  error?: string;
 }
 
 export default function CustomInput({
   leftIcon,
   rightIcon,
+  error,
   ...props
 }: CustomInputProps) {
   return (
-    <View style={styles.container}>
-      {leftIcon}
+    <View style={styles.wrapper}>
+      <View
+        style={[
+          styles.container,
+          error && styles.errorBorder,
+        ]}
+      >
+        {leftIcon}
 
-      <TextInput
-        {...props}
-        style={styles.input}
-        placeholderTextColor={COLORS.gray}
-      />
+        <TextInput
+          {...props}
+          style={styles.input}
+          placeholderTextColor={
+            COLORS.gray
+          }
+        />
 
-      {rightIcon}
+        {rightIcon}
+      </View>
+
+      {error ? (
+        <Text style={styles.errorText}>
+          {error}
+        </Text>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginBottom: 15,
+  },
+
   container: {
     height: 55,
 
@@ -49,12 +72,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     paddingHorizontal: 15,
+  },
 
-    marginBottom: 15,
+  errorBorder: {
+    borderColor: COLORS.danger,
   },
 
   input: {
     flex: 1,
     marginHorizontal: 10,
+  },
+
+  errorText: {
+    color: COLORS.danger,
+    marginTop: 5,
+    fontSize: 12,
   },
 });

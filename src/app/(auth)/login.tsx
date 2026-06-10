@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import React, {
+  useState,
+  useEffect,
+} from "react";
+
 import {
   View,
   Text,
@@ -9,19 +13,77 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 
+import {
+  useForm,
+  Controller,
+} from "react-hook-form";
+
+import { router } from "expo-router";
+
+import { getDashboardRoute } from "../../navigation/authGuard";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import CustomInput from "../../components/common/CustomInput";
 import CustomButton from "../../components/common/CustomButton";
 
 import { COLORS } from "../../theme/colors";
 
-export default function LoginScreen() {
-  const [mobile, setMobile] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [secureText, setSecureText] = useState(true);
+import {
+  saveRememberMe,
+  getRememberMe,
+} from "../../services/storage/authStorage";
 
-  const handleLogin = () => {
-    console.log("Login Pressed");
+import {
+  loginSchema,
+  LoginSchemaType,
+} from "../../features/auth/loginSchema";
+
+export default function LoginScreen() {
+  const [secureText, setSecureText] =
+    useState(true);
+
+  const [rememberMe, setRememberMe] =
+    useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
+    resolver: zodResolver(loginSchema),
+
+    defaultValues: {
+      mobile: "",
+      password: "",
+    },
+  });
+
+  useEffect(() => {
+    const loadRememberMe =
+      async () => {
+        const stored =
+          await getRememberMe();
+
+        setRememberMe(stored);
+      };
+
+    loadRememberMe();
+  }, []);
+
+  const onSubmit = (
+    data: LoginSchemaType
+  ) => {
+    console.log(
+      "Login Data",
+      data
+    );
+
+    const role = "admin";
+
+    router.replace(
+      getDashboardRoute(role)
+    );
   };
 
   return (
@@ -37,60 +99,111 @@ export default function LoginScreen() {
       </Text>
 
       <Text style={styles.subtitle}>
-        Login to manage your dairy business
+        Login to manage your dairy
+        business
       </Text>
 
-      <CustomInput
-        placeholder="Mobile Number"
-        keyboardType="phone-pad"
-        value={mobile}
-        onChangeText={setMobile}
-        leftIcon={
-          <Ionicons
-            name="person-outline"
-            size={22}
-            color={COLORS.gray}
-          />
-        }
-      />
-
-      <CustomInput
-        placeholder="Password"
-        secureTextEntry={secureText}
-        value={password}
-        onChangeText={setPassword}
-        leftIcon={
-          <Ionicons
-            name="lock-closed-outline"
-            size={22}
-            color={COLORS.gray}
-          />
-        }
-        rightIcon={
-          <TouchableOpacity
-            onPress={() =>
-              setSecureText(!secureText)
+      <Controller
+        control={control}
+        name="mobile"
+        render={({
+          field: {
+            onChange,
+            value,
+          },
+        }) => (
+          <CustomInput
+            placeholder="Mobile Number"
+            keyboardType="phone-pad"
+            value={value}
+            onChangeText={onChange}
+            error={
+              errors.mobile?.message
             }
-          >
-            <Ionicons
-              name={
-                secureText
-                  ? "eye-off-outline"
-                  : "eye-outline"
-              }
-              size={22}
-              color={COLORS.gray}
-            />
-          </TouchableOpacity>
-        }
+            leftIcon={
+              <Ionicons
+                name="person-outline"
+                size={22}
+                color={COLORS.gray}
+              />
+            }
+          />
+        )}
       />
 
-      <View style={styles.optionsContainer}>
+      <Controller
+        control={control}
+        name="password"
+        render={({
+          field: {
+            onChange,
+            value,
+          },
+        }) => (
+          <CustomInput
+            placeholder="Password"
+            secureTextEntry={
+              secureText
+            }
+            value={value}
+            onChangeText={onChange}
+            error={
+              errors.password
+                ?.message
+            }
+            leftIcon={
+              <Ionicons
+                name="lock-closed-outline"
+                size={22}
+                color={COLORS.gray}
+              />
+            }
+            rightIcon={
+              <TouchableOpacity
+                onPress={() =>
+                  setSecureText(
+                    !secureText
+                  )
+                }
+              >
+                <Ionicons
+                  name={
+                    secureText
+                      ? "eye-off-outline"
+                      : "eye-outline"
+                  }
+                  size={22}
+                  color={
+                    COLORS.gray
+                  }
+                />
+              </TouchableOpacity>
+            }
+          />
+        )}
+      />
+
+      <View
+        style={
+          styles.optionsContainer
+        }
+      >
         <TouchableOpacity
-          style={styles.rememberContainer}
-          onPress={() =>
-            setRememberMe(!rememberMe)
+          style={
+            styles.rememberContainer
           }
+          onPress={async () => {
+            const newValue =
+              !rememberMe;
+
+            setRememberMe(
+              newValue
+            );
+
+            await saveRememberMe(
+              newValue
+            );
+          }}
         >
           <Ionicons
             name={
@@ -102,13 +215,21 @@ export default function LoginScreen() {
             color={COLORS.primary}
           />
 
-          <Text style={styles.rememberText}>
+          <Text
+            style={
+              styles.rememberText
+            }
+          >
             Remember Me
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <Text style={styles.forgotText}>
+          <Text
+            style={
+              styles.forgotText
+            }
+          >
             Forgot Password?
           </Text>
         </TouchableOpacity>
@@ -116,7 +237,9 @@ export default function LoginScreen() {
 
       <CustomButton
         title="Login"
-        onPress={handleLogin}
+        onPress={handleSubmit(
+          onSubmit
+        )}
       />
     </View>
   );
@@ -125,7 +248,9 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+
+    backgroundColor:
+      COLORS.background,
 
     paddingHorizontal: 25,
 
@@ -133,12 +258,12 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 170,
-    height: 170,
+    width: 100,
+    height: 100,
 
     alignSelf: "center",
 
-    marginBottom: 20,
+    marginBottom: 15,
   },
 
   title: {
@@ -156,13 +281,15 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
 
     marginTop: 8,
+
     marginBottom: 35,
   },
 
   optionsContainer: {
     flexDirection: "row",
 
-    justifyContent: "space-between",
+    justifyContent:
+      "space-between",
 
     alignItems: "center",
 

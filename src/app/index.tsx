@@ -1,5 +1,5 @@
 import { Redirect } from "expo-router";
 
-export default function Index() {
-  return <Redirect href="/splash" />;
+export default function CommonIndex() {
+  return <Redirect href="/common/componentshowcase" />;
 }

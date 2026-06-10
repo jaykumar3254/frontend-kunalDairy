@@ -1,56 +1,138 @@
-# Welcome to your Expo app 👋
+# Dairy Billing & Customer Management App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 🚀 Tech Stack
 
-## Get started
+## Frontend
 
-1. Install dependencies
+* Expo React Native
+* TypeScript
+* Expo Router
+* React Hook Form
+* Zod Validation
+* React Native Paper
+* Expo Vector Icons
+# 📂 Project Structure
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+frontend
+│
+├── assets
+│   ├── fonts
+│   ├── icons
+│   └── images
+│
+├── src
+│   │
+│   ├── app
+│   │   ├── (admin)
+│   │   ├── (auth)
+│   │   ├── (user)
+│   │   ├── common
+│   │   ├── _layout.tsx
+│   │   ├── index.tsx
+│   │   └── splash.tsx
+│   │
+│   ├── components
+│   │   ├── cards
+│   │   └── common
+│   │
+│   ├── constants
+│   │
+│   ├── features
+│   │   ├── auth
+│   │   ├── customer
+│   │   ├── invoice
+│   │   └── product
+│   │
+│   ├── hooks
+│   │
+│   ├── navigation
+│   │
+│   ├── services
+│   │   └── storage
+│   │
+│   ├── store
+│   │
+│   ├── theme
+│   │
+│   ├── types
+│   │
+│   └── utils
+│
+├── app.json
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+# 📅 Development Progress
 
-### Other setup steps
+## Phase 0 — Project Initialization
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### Sprint 0.1
 
-## Learn more
+* [x] Expo Setup
+* [x] TypeScript Setup
+* [x] Expo Router Setup
+* [x] Folder Structure
 
-To learn more about developing your project with Expo, look at the following resources:
+### Sprint 0.2
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+* [x] Theme System
+* [x] Reusable Components
+* [x] Routing Structure
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## Phase 1 — Authentication
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Sprint 1.1
+
+* [x] Splash Screen
+
+### Sprint 1.2
+
+* [x] Login UI
+* [x] Password Visibility Toggle
+* [x] Remember Me
+* [x] Form Validation
+* [x] Dashboard Navigation
+
+---
+
+## Phase 2 — Design System
+
+### Sprint 2.1
+
+* [ ] Stat Card
+* [ ] Customer Card
+* [ ] Product Card
+* [ ] Invoice Card
+
+---
+
+# ⚙️ Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+```
+
+Navigate to project:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run development server:
+
+```bash
+npx expo start
+```

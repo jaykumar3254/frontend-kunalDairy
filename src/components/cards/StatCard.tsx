@@ -1,7 +1,12 @@
-
 import { StyleSheet, Text, View } from "react-native";
 
-import { COLORS } from "../../theme/colors";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../theme";
 
 interface StatCardProps {
   title: string;
@@ -21,39 +26,26 @@ export default function StatCard({ title, value }: StatCardProps) {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-
     backgroundColor: COLORS.white,
 
-    padding: 16,
+    padding: SPACING.md,
 
-    borderRadius: 12,
+    borderRadius: BORDER_RADIUS.md,
 
-    shadowColor: "#000",
-
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-
-    shadowOpacity: 0.1,
-
-    shadowRadius: 4,
-
-    elevation: 3,
+    ...SHADOWS.card,
   },
 
   title: {
     color: COLORS.gray,
-
-    fontSize: 14,
+    fontSize: TYPOGRAPHY.sm,
   },
 
   value: {
-    fontSize: 24,
+    fontSize: TYPOGRAPHY.h2,
 
     fontWeight: "700",
 
-    marginTop: 8,
+    marginTop: SPACING.sm,
 
     color: COLORS.text,
   },

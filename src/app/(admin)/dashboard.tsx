@@ -1,32 +1,99 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+
+import StatCard from "../../components/cards/StatCard";
+import CustomButton from "../../components/common/CustomButton";
+
+import { COLORS, SPACING, TYPOGRAPHY } from "../../theme";
 
 export default function DashboardScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        Admin Dashboard
-      </Text>
-    </View>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Good Morning 👋</Text>
+
+        <Text style={styles.title}>Dairy Management</Text>
+      </View>
+
+      <View style={styles.row}>
+        <StatCard title="Customers" value="120" />
+
+        <View style={styles.gap} />
+
+        <StatCard title="Products" value="18" />
+      </View>
+
+      <View style={styles.row}>
+        <StatCard title="Invoices" value="55" />
+
+        <View style={styles.gap} />
+
+        <StatCard title="Revenue" value="₹1.2L" />
+      </View>
+
+      <Text style={styles.sectionTitle}>Quick Actions</Text>
+
+      <CustomButton
+        title="Add Customer"
+        onPress={() => console.log("Add Customer")}
+      />
+
+      <CustomButton
+        title="Create Bill"
+        onPress={() => console.log("Create Bill")}
+      />
+
+      <Text style={styles.sectionTitle}>Recent Activity</Text>
+
+      <Text style={styles.placeholder}>No recent activity found.</Text>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.background,
+  },
 
-    justifyContent: "center",
+  content: {
+    padding: SPACING.md,
+  },
 
-    alignItems: "center",
+  header: {
+    marginBottom: SPACING.lg,
+  },
+
+  greeting: {
+    fontSize: TYPOGRAPHY.lg,
+    color: COLORS.gray,
   },
 
   title: {
-    fontSize: 24,
-
+    fontSize: TYPOGRAPHY.h1,
     fontWeight: "700",
+    color: COLORS.text,
+  },
+
+  row: {
+    flexDirection: "row",
+    marginBottom: SPACING.md,
+  },
+
+  gap: {
+    width: SPACING.sm,
+  },
+
+  sectionTitle: {
+    fontSize: TYPOGRAPHY.h3,
+    fontWeight: "600",
+    marginTop: SPACING.lg,
+    marginBottom: SPACING.md,
+    color: COLORS.text,
+  },
+
+  placeholder: {
+    color: COLORS.gray,
+    marginTop: SPACING.sm,
   },
 });

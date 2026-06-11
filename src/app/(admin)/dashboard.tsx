@@ -44,6 +44,11 @@ export default function DashboardScreen() {
         onPress={() => router.push("/create-bill")}
       />
 
+      <CustomButton
+        title="Customers"
+        onPress={() => router.push("/customers")}
+      />
+
       <Text style={styles.sectionTitle}>Recent Activity</Text>
 
       <Text style={styles.placeholder}>No recent activity found.</Text>

@@ -1,8 +1,9 @@
-
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import StatCard from "../../components/cards/StatCard";
 import CustomButton from "../../components/common/CustomButton";
+
+import { router } from "expo-router";
 
 import { COLORS, SPACING, TYPOGRAPHY } from "../../theme";
 
@@ -35,12 +36,12 @@ export default function DashboardScreen() {
 
       <CustomButton
         title="Add Customer"
-        onPress={() => console.log("Add Customer")}
+        onPress={() => router.push("/add-customer")}
       />
 
       <CustomButton
         title="Create Bill"
-        onPress={() => console.log("Create Bill")}
+        onPress={() => router.push("/create-bill")}
       />
 
       <Text style={styles.sectionTitle}>Recent Activity</Text>

@@ -1,29 +1,27 @@
-import { Alert, ScrollView, StyleSheet, Text } from "react-native";
-
-import { Controller, useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { Alert, StyleSheet, Text } from "react-native";
 
 import CustomButton from "../../components/common/CustomButton";
 import CustomInput from "../../components/common/CustomInput";
 import CustomTextArea from "../../components/common/CustomTextArea";
-
-import { COLORS, SPACING, TYPOGRAPHY } from "../../theme";
+import ScreenWrapper from "../../components/common/ScreenWrapper";
 
 import {
   customerSchema,
   CustomerSchemaType,
 } from "../../features/customer/customerSchema";
 
-export default function AddCustomerScreen() {
+import { COLORS } from "../../theme/colors";
+
+export default function AddCustomer() {
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
+    reset,
   } = useForm<CustomerSchemaType>({
     resolver: zodResolver(customerSchema),
-
     defaultValues: {
       name: "",
       mobile: "",
@@ -34,14 +32,14 @@ export default function AddCustomerScreen() {
   const onSubmit = (data: CustomerSchemaType) => {
     console.log("Customer Data:", data);
 
-    Alert.alert("Success", "Customer Added Successfully");
+    Alert.alert("Customer Added", `${data.name} has been added successfully`);
 
     reset();
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Add Customer</Text>
+    <ScreenWrapper>
+      <Text style={styles.heading}>Add Customer</Text>
 
       <Controller
         control={control}
@@ -51,10 +49,10 @@ export default function AddCustomerScreen() {
             placeholder="Customer Name"
             value={value}
             onChangeText={onChange}
-            error={errors.name?.message}
           />
         )}
       />
+      {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
 
       <Controller
         control={control}
@@ -62,13 +60,15 @@ export default function AddCustomerScreen() {
         render={({ field: { onChange, value } }) => (
           <CustomInput
             placeholder="Mobile Number"
-            keyboardType="phone-pad"
             value={value}
             onChangeText={onChange}
-            error={errors.mobile?.message}
+            keyboardType="phone-pad"
           />
         )}
       />
+      {errors.mobile && (
+        <Text style={styles.error}>{errors.mobile.message}</Text>
+      )}
 
       <Controller
         control={control}
@@ -78,34 +78,30 @@ export default function AddCustomerScreen() {
             placeholder="Address"
             value={value}
             onChangeText={onChange}
-            error={errors.address?.message}
           />
         )}
       />
+      {errors.address && (
+        <Text style={styles.error}>{errors.address.message}</Text>
+      )}
 
       <CustomButton title="Save Customer" onPress={handleSubmit(onSubmit)} />
-    </ScrollView>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-
-    backgroundColor: COLORS.background,
-  },
-
-  content: {
-    padding: SPACING.md,
-  },
-
-  title: {
-    fontSize: TYPOGRAPHY.h2,
-
+  heading: {
+    fontSize: 28,
     fontWeight: "700",
+    color: COLORS.textPrimary,
+    marginBottom: 20,
+  },
 
-    marginBottom: SPACING.lg,
-
-    color: COLORS.text,
+  error: {
+    color: "red",
+    marginBottom: 10,
+    marginTop: -6,
+    fontSize: 12,
   },
 });

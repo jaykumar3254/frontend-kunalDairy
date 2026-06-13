@@ -1,10 +1,67 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { useMemo, useState } from "react";
 
-export default function products() {
+import { FlatList, StyleSheet, Text, View } from "react-native";
+
+import ProductCard from "../../components/cards/ProductCard";
+import SearchBar from "../../components/common/SearchBar";
+
+import { mockProducts } from "../../features/product/data/mockProducts";
+
+export default function ProductsScreen() {
+  const [search, setSearch] = useState("");
+
+  const filteredProducts = useMemo(() => {
+    return mockProducts.filter((product) =>
+      product.name.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [search]);
+
   return (
-    <View>
-      <Text>Coming Soon</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Products</Text>
+
+      <SearchBar
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Search Product"
+      />
+
+      <FlatList
+        data={filteredProducts}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <ProductCard productName={item.name} price={item.price.toString()} />
+        )}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No Products Found</Text>
+          </View>
+        }
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#F5F5F5",
+  },
+
+  heading: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginBottom: 16,
+  },
+
+  emptyContainer: {
+    marginTop: 50,
+    alignItems: "center",
+  },
+
+  emptyText: {
+    color: "gray",
+  },
+});

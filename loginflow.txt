@@ -1,0 +1,20 @@
+Login
+   ↓
+Backend
+   ↓
+JWT + Role
+   ↓
+Auth Store
+   ↓
+
+SUPER_ADMIN
+   ↓
+(super-admin)/dashboard
+
+ADMIN
+   ↓
+(admin)/dashboard
+
+CUSTOMER
+   ↓
+(user)/dashboard

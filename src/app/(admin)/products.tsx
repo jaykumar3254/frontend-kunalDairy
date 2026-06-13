@@ -31,7 +31,13 @@ export default function ProductsScreen() {
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <ProductCard productName={item.name} price={item.price.toString()} />
+          <ProductCard
+            name={item.name}
+            category={item.category}
+            price={item.price}
+            stock={item.stock}
+            unit={item.unit}
+          />
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>

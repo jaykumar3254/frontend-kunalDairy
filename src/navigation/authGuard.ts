@@ -1,15 +1,18 @@
-export type UserRole =
-  | "admin"
-  | "user";
+import { UserRole } from "../types/auth";
 
-export const getDashboardRoute = (
-  role: UserRole
-) => {
+export const getDashboardRoute = (role: UserRole, customerMode = false) => {
+  if (customerMode) {
+    return "/(user)/dashboard";
+  }
+
   switch (role) {
-    case "admin":
+    case "SUPER_ADMIN":
+      return "/(super-admin)/dashboard";
+
+    case "ADMIN":
       return "/(admin)/dashboard";
 
-    case "user":
+    case "CUSTOMER":
       return "/(user)/dashboard";
 
     default:

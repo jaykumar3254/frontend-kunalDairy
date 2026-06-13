@@ -1,5 +1,11 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import RoleToggle from "../../components/common/RoleToggle";
+
+import { useAuthStore } from "../../store/authStore";
+
+import { useEffect } from "react";
+
 import StatCard from "../../components/cards/StatCard";
 import CustomButton from "../../components/common/CustomButton";
 
@@ -8,6 +14,14 @@ import { router } from "expo-router";
 import { COLORS, SPACING, TYPOGRAPHY } from "../../theme";
 
 export default function DashboardScreen() {
+  const customerMode = useAuthStore((state) => state.customerMode);
+
+  useEffect(() => {
+    if (customerMode) {
+      router.replace("/(user)/dashboard");
+    }
+  }, [customerMode]);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
@@ -15,6 +29,7 @@ export default function DashboardScreen() {
 
         <Text style={styles.title}>Dairy Management</Text>
       </View>
+      <RoleToggle />
 
       <View style={styles.row}>
         <StatCard title="Customers" value="120" />

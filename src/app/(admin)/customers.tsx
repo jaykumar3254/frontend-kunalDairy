@@ -38,6 +38,7 @@ export default function CustomersScreen() {
             name={item.name}
             mobile={item.mobile}
             balance={item.balance}
+            status={item.status}
           />
         )}
         showsVerticalScrollIndicator={false}

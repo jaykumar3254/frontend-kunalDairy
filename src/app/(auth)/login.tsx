@@ -1,22 +1,16 @@
-import React, {
-  useState,
-  useEffect,
-} from "react";
+import { mockUsers } from "../../features/auth/data/mockUsers";
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { useAuthStore } from "../../store/authStore";
+
+import { secureStorage } from "../../services/storage/secureStorage";
+
+import { useEffect, useState } from "react";
+
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import {
-  useForm,
-  Controller,
-} from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { router } from "expo-router";
 
@@ -24,27 +18,22 @@ import { getDashboardRoute } from "../../navigation/authGuard";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import CustomInput from "../../components/common/CustomInput";
 import CustomButton from "../../components/common/CustomButton";
+import CustomInput from "../../components/common/CustomInput";
 
 import { COLORS } from "../../theme/colors";
 
 import {
-  saveRememberMe,
   getRememberMe,
+  saveRememberMe,
 } from "../../services/storage/authStorage";
 
-import {
-  loginSchema,
-  LoginSchemaType,
-} from "../../features/auth/loginSchema";
+import { loginSchema, LoginSchemaType } from "../../features/auth/loginSchema";
 
 export default function LoginScreen() {
-  const [secureText, setSecureText] =
-    useState(true);
+  const [secureText, setSecureText] = useState(true);
 
-  const [rememberMe, setRememberMe] =
-    useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const {
     control,
@@ -60,30 +49,44 @@ export default function LoginScreen() {
   });
 
   useEffect(() => {
-    const loadRememberMe =
-      async () => {
-        const stored =
-          await getRememberMe();
+    const loadRememberMe = async () => {
+      const stored = await getRememberMe();
 
-        setRememberMe(stored);
-      };
+      setRememberMe(stored);
+    };
 
     loadRememberMe();
   }, []);
 
-  const onSubmit = (
-    data: LoginSchemaType
-  ) => {
-    console.log(
-      "Login Data",
-      data
+  const login = useAuthStore((state) => state.login);
+
+  const onSubmit = async (data: LoginSchemaType) => {
+    const user = mockUsers.find(
+      (user) => user.mobile === data.mobile && user.password === data.password,
     );
 
-    const role = "admin";
+    if (!user) {
+      alert("Invalid mobile number or password");
 
-    router.replace(
-      getDashboardRoute(role)
-    );
+      return;
+    }
+
+    const mockToken = `jwt_${user.id}_${Date.now()}`;
+
+    const authUser = {
+      id: user.id,
+      name: user.name,
+      mobile: user.mobile,
+      role: user.role,
+    };
+
+    login(mockToken, authUser);
+
+    await secureStorage.saveToken(mockToken);
+
+    await secureStorage.saveUser(JSON.stringify(authUser));
+
+    router.replace(getDashboardRoute(user.role));
   };
 
   return (
@@ -94,38 +97,22 @@ export default function LoginScreen() {
         resizeMode="contain"
       />
 
-      <Text style={styles.title}>
-        Welcome Back!
-      </Text>
+      <Text style={styles.title}>Welcome Back!</Text>
 
-      <Text style={styles.subtitle}>
-        Login to manage your dairy
-        business
-      </Text>
+      <Text style={styles.subtitle}>Login to manage your dairy business</Text>
 
       <Controller
         control={control}
         name="mobile"
-        render={({
-          field: {
-            onChange,
-            value,
-          },
-        }) => (
+        render={({ field: { onChange, value } }) => (
           <CustomInput
             placeholder="Mobile Number"
             keyboardType="phone-pad"
             value={value}
             onChangeText={onChange}
-            error={
-              errors.mobile?.message
-            }
+            error={errors.mobile?.message}
             leftIcon={
-              <Ionicons
-                name="person-outline"
-                size={22}
-                color={COLORS.gray}
-              />
+              <Ionicons name="person-outline" size={22} color={COLORS.gray} />
             }
           />
         )}
@@ -134,23 +121,13 @@ export default function LoginScreen() {
       <Controller
         control={control}
         name="password"
-        render={({
-          field: {
-            onChange,
-            value,
-          },
-        }) => (
+        render={({ field: { onChange, value } }) => (
           <CustomInput
             placeholder="Password"
-            secureTextEntry={
-              secureText
-            }
+            secureTextEntry={secureText}
             value={value}
             onChangeText={onChange}
-            error={
-              errors.password
-                ?.message
-            }
+            error={errors.password?.message}
             leftIcon={
               <Ionicons
                 name="lock-closed-outline"
@@ -159,23 +136,11 @@ export default function LoginScreen() {
               />
             }
             rightIcon={
-              <TouchableOpacity
-                onPress={() =>
-                  setSecureText(
-                    !secureText
-                  )
-                }
-              >
+              <TouchableOpacity onPress={() => setSecureText(!secureText)}>
                 <Ionicons
-                  name={
-                    secureText
-                      ? "eye-off-outline"
-                      : "eye-outline"
-                  }
+                  name={secureText ? "eye-off-outline" : "eye-outline"}
                   size={22}
-                  color={
-                    COLORS.gray
-                  }
+                  color={COLORS.gray}
                 />
               </TouchableOpacity>
             }
@@ -183,64 +148,32 @@ export default function LoginScreen() {
         )}
       />
 
-      <View
-        style={
-          styles.optionsContainer
-        }
-      >
+      <View style={styles.optionsContainer}>
         <TouchableOpacity
-          style={
-            styles.rememberContainer
-          }
+          style={styles.rememberContainer}
           onPress={async () => {
-            const newValue =
-              !rememberMe;
+            const newValue = !rememberMe;
 
-            setRememberMe(
-              newValue
-            );
+            setRememberMe(newValue);
 
-            await saveRememberMe(
-              newValue
-            );
+            await saveRememberMe(newValue);
           }}
         >
           <Ionicons
-            name={
-              rememberMe
-                ? "checkbox"
-                : "square-outline"
-            }
+            name={rememberMe ? "checkbox" : "square-outline"}
             size={22}
             color={COLORS.primary}
           />
 
-          <Text
-            style={
-              styles.rememberText
-            }
-          >
-            Remember Me
-          </Text>
+          <Text style={styles.rememberText}>Remember Me</Text>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <Text
-            style={
-              styles.forgotText
-            }
-          >
-            Forgot Password?
-          </Text>
+          <Text style={styles.forgotText}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
 
-      <CustomButton
-        title="Login"
-        onPress={handleSubmit(
-          onSubmit
-        )}
-      />
+      <CustomButton title="Login" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
@@ -249,8 +182,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor:
-      COLORS.background,
+    backgroundColor: COLORS.background,
 
     paddingHorizontal: 25,
 
@@ -288,8 +220,7 @@ const styles = StyleSheet.create({
   optionsContainer: {
     flexDirection: "row",
 
-    justifyContent:
-      "space-between",
+    justifyContent: "space-between",
 
     alignItems: "center",
 
